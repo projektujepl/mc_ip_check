@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Minecraft Server Status</title>
+<link href="https://fonts.cdnfonts.com/css/minecraft-4" rel="stylesheet">
+<style>
+body {
+    background: #1e1e1e;
+    color: #fff;
+    font-family: 'Minecraft', sans-serif;
+    text-align: center;
+    padding: 30px;
+}
+.box {
+    background: #2b2b2b;
+    border: 3px solid #555;
+    padding: 25px;
+    display: inline-block;
+    box-shadow: 0 0 20px #000;
+}
+input {
+    padding: 10px;
+    width: 250px;
+    background: #111;
+    border: 2px solid #555;
+    color: white;
+}
+button {
+    padding: 10px 15px;
+    background: #3c8527;
+    border: 2px solid #2a5e1c;
+    color: white;
+    cursor: pointer;
+}
+button:hover { background: #4caf50; }
+.status { margin-top: 10px; font-size: 18px; }
+.online { color: #55ff55; }
+.offline { color: #ff5555; }
+.result { margin-top: 20px; text-align: left; max-width: 600px; word-wrap: break-word; }
+.player { margin-left: 10px; }
+</style>
+</head>
+<body>
+
+<div class="box">
+    <h1>MC SERVER CHECKER</h1>
+    <input type="text" id="ip" placeholder="np. server.mymcserver.tld">
+    <button onclick="checkServer()">SPRAWDŹ</button>
+    <div class="status" id="status"></div>
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+function checkServer() {
+    const ip = document.getElementById('ip').value;
+    const statusDiv = document.getElementById('status');
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = 'Ładowanie...';
+    statusDiv.innerHTML = '';
+
+    fetch(`https://api.mcsrvstat.us/2/${ip}`)
+        .then(res => res.json())
+        .then(data => {
+            if(data.online){
+                statusDiv.innerHTML = '<span class="online">● ONLINE</span>';
+                let html = `<b>IP:</b> ${data.ip}:${data.port}<br>`;
+                html += `<b>Wersja:</b> ${data.version.name || data.version || 'unknown'}<br>`;
+                html += `<b>Gracze:</b> ${data.players.online}/${data.players.max}<br>`;
+
+                if(data.motd && data.motd.html){
+                    html += `<b>MOTD:</b><br>${data.motd.html.join('<br>')}<br>`;
+                }
+
+                if(data.players.list){
+                    html += `<b>Lista graczy:</b><br>`;
+                    data.players.list.forEach(p => {
+                        html += `<div class="player">${p.name}</div>`;
+                    });
+                }
+
+                if(data.icon){
+                    html += `<br><img src="${data.icon}" width="64">`;
+                }
+
+                resultDiv.innerHTML = html;
+            } else {
+                statusDiv.innerHTML = '<span class="offline">● OFFLINE</span>';
+                resultDiv.innerHTML = 'Serwer jest offline lub nie istnieje.';
+            }
+        })
+        .catch(err => {
+            statusDiv.innerHTML = '<span class="offline">● OFFLINE</span>';
+            resultDiv.innerHTML = 'Błąd połączenia z serwerem';
+            console.error(err);
+        });
+}
+</script>
+</body>
+</html>
