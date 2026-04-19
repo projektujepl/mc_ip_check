@@ -3,52 +3,189 @@
 <head>
 <meta charset="UTF-8">
 <title>Minecraft Server Status</title>
-<link href="https://fonts.cdnfonts.com/css/minecraft-4" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
-body {
-    background: #1e1e1e;
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0d0d14;
     color: #fff;
-    font-family: 'Minecraft', sans-serif;
-    text-align: center;
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 30px;
-}
-.box {
-    background: #2b2b2b;
-    border: 3px solid #555;
-    padding: 25px;
-    display: inline-block;
-    box-shadow: 0 0 20px #000;
-}
-input {
-    padding: 10px;
-    width: 250px;
-    background: #111;
-    border: 2px solid #555;
-    color: white;
-}
-button {
-    padding: 10px 15px;
-    background: #3c8527;
-    border: 2px solid #2a5e1c;
-    color: white;
+    background-image: radial-gradient(ellipse at 60% 30%, rgba(180, 0, 120, 0.12) 0%, transparent 60%),
+                      radial-gradient(ellipse at 20% 80%, rgba(100, 0, 180, 0.10) 0%, transparent 50%);
+  }
+
+  .panel {
+    background: #13121f;
+    border-radius: 20px;
+    padding: 40px;
+    width: 100%;
+    max-width: 560px;
+    box-shadow: 0 0 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05);
+  }
+
+  .logo-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+
+  .logo-icon {
+    width: 52px;
+    height: 52px;
+    background: linear-gradient(135deg, #e91e8c, #c2185b);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    box-shadow: 0 0 20px rgba(233,30,140,0.4);
+  }
+
+  .logo-text h1 {
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+  }
+
+  .logo-text p {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #e91e8c;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  h2 {
+    font-size: 32px;
+    font-weight: 900;
+    margin-bottom: 6px;
+  }
+
+  .subtitle {
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 28px;
+  }
+
+  .input-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  input {
+    flex: 1;
+    padding: 13px 16px;
+    background: #1c1b2e;
+    border: 1.5px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    color: #fff;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  input:focus {
+    border-color: #e91e8c;
+  }
+
+  input::placeholder { color: #555; }
+
+  button {
+    padding: 13px 22px;
+    background: linear-gradient(135deg, #e91e8c, #c2185b);
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
     cursor: pointer;
-}
-button:hover { background: #4caf50; }
-.status { margin-top: 10px; font-size: 18px; }
-.online { color: #55ff55; }
-.offline { color: #ff5555; }
-.result { margin-top: 20px; text-align: left; max-width: 600px; word-wrap: break-word; }
-.player { margin-left: 10px; }
+    white-space: nowrap;
+    box-shadow: 0 4px 20px rgba(233,30,140,0.35);
+    transition: opacity 0.2s, transform 0.1s;
+  }
+
+  button:hover { opacity: 0.9; transform: translateY(-1px); }
+  button:active { transform: translateY(0); }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  .online-badge {
+    background: rgba(85,255,85,0.1);
+    color: #55ff55;
+    border: 1px solid rgba(85,255,85,0.2);
+  }
+
+  .offline-badge {
+    background: rgba(255,85,85,0.1);
+    color: #ff5555;
+    border: 1px solid rgba(255,85,85,0.2);
+  }
+
+  .result-card {
+    background: #1a1929;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px;
+    padding: 20px;
+    font-size: 14px;
+    line-height: 2;
+  }
+
+  .result-card b {
+    color: #e91e8c;
+  }
+
+  .player {
+    margin-left: 12px;
+    color: #aaa;
+    font-size: 13px;
+  }
+
+  .server-icon {
+    border-radius: 8px;
+    margin-top: 10px;
+  }
 </style>
 </head>
 <body>
+<div class="panel">
+  <div class="logo-row">
+    <div class="logo-icon">⛏️</div>
+    <div class="logo-text">
+      <h1>MC Checker</h1>
+      <p>Panel Gracza</p>
+    </div>
+  </div>
 
-<div class="box">
-    <h1>MC SERVER CHECKER</h1>
+  <h2>Status Serwera</h2>
+  <p class="subtitle">Sprawdź dowolny serwer Minecraft</p>
+
+  <div class="input-row">
     <input type="text" id="ip" placeholder="np: hypixel.net">
     <button onclick="checkServer()">SPRAWDŹ</button>
-    <div class="status" id="status"></div>
-    <div class="result" id="result"></div>
+  </div>
+
+  <div id="status"></div>
+  <div id="result"></div>
 </div>
 
 <script>
@@ -56,42 +193,43 @@ function checkServer() {
     const ip = document.getElementById('ip').value;
     const statusDiv = document.getElementById('status');
     const resultDiv = document.getElementById('result');
-    resultDiv.innerHTML = 'Ładowanie...';
+    resultDiv.innerHTML = '';
     statusDiv.innerHTML = '';
+
+    const card = document.createElement('div');
+    card.className = 'result-card';
+    card.innerHTML = 'Ładowanie...';
+    resultDiv.appendChild(card);
 
     fetch(`https://api.mcsrvstat.us/2/${ip}`)
         .then(res => res.json())
         .then(data => {
             if(data.online){
-                statusDiv.innerHTML = '<span class="online">● ONLINE</span>';
+                statusDiv.innerHTML = '<span class="status-badge online-badge">● ONLINE</span>';
                 let html = `<b>IP:</b> ${data.ip}:${data.port}<br>`;
-                html += `<b>Wersja:</b> ${data.version.name || data.version || 'unknown'}<br>`;
+                html += `<b>Wersja:</b> ${data.version?.name || data.version || 'unknown'}<br>`;
                 html += `<b>Gracze:</b> ${data.players.online}/${data.players.max}<br>`;
-
-                if(data.motd && data.motd.html){
+                if(data.motd?.html){
                     html += `<b>MOTD:</b><br>${data.motd.html.join('<br>')}<br>`;
                 }
-
                 if(data.players.list){
                     html += `<b>Lista graczy:</b><br>`;
                     data.players.list.forEach(p => {
-                        html += `<div class="player">${p.name}</div>`;
+                        html += `<div class="player">• ${p.name}</div>`;
                     });
                 }
-
                 if(data.icon){
-                    html += `<br><img src="${data.icon}" width="64">`;
+                    html += `<br><img class="server-icon" src="${data.icon}" width="64">`;
                 }
-
-                resultDiv.innerHTML = html;
+                card.innerHTML = html;
             } else {
-                statusDiv.innerHTML = '<span class="offline">● OFFLINE</span>';
-                resultDiv.innerHTML = 'Serwer jest offline lub nie istnieje.';
+                statusDiv.innerHTML = '<span class="status-badge offline-badge">● OFFLINE</span>';
+                card.innerHTML = 'Serwer jest offline lub nie istnieje.';
             }
         })
         .catch(err => {
-            statusDiv.innerHTML = '<span class="offline">● OFFLINE</span>';
-            resultDiv.innerHTML = 'Błąd połączenia z serwerem';
+            statusDiv.innerHTML = '<span class="status-badge offline-badge">● BŁĄD</span>';
+            card.innerHTML = 'Błąd połączenia z API.';
             console.error(err);
         });
 }
